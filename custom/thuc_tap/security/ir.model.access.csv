@@ -1,2 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_thuc_tap_thuc_tap,thuc_tap.thuc_tap,model_thuc_tap_thuc_tap,base.group_user,1,1,1,1
+access_mg_size_standard,access_mg_size_standard,model_mg_size_standard,base.group_user,1,1,1,1
+access_mg_bidding_package,access_mg_bidding_package,model_mg_bidding_package,base.group_user,1,1,1,1
+
+

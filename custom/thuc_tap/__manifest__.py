@@ -11,6 +11,7 @@
     'depends': [
     ],
     'data': [
+        'security/ir.model.access.csv',
         'views/bidding_package.xml',
         'views/size_standard.xml',
         'data/sequence_bidding_package.xml',
