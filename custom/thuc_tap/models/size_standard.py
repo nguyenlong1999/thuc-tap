@@ -3,7 +3,6 @@ import re
 
 from odoo.exceptions import ValidationError
 
-
 class SizeStandard(models.Model):
     _name = "mg.size.standard"
     _description = "Package Record"
