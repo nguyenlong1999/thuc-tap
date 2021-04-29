@@ -1,0 +1,60 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+<!--
+    <record model="ir.ui.view" id="thuc_tap.list">
+      <field name="name">thuc_tap list</field>
+      <field name="model">thuc_tap.thuc_tap</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="name"/>
+          <field name="value"/>
+          <field name="value2"/>
+        </tree>
+      </field>
+    </record>
+-->
+
+    <!-- actions opening views on models -->
+<!--
+    <record model="ir.actions.act_window" id="thuc_tap.action_window">
+      <field name="name">thuc_tap window</field>
+      <field name="res_model">thuc_tap.thuc_tap</field>
+      <field name="view_mode">tree,form</field>
+    </record>
+-->
+
+    <!-- server action to the one above -->
+<!--
+    <record model="ir.actions.server" id="thuc_tap.action_server">
+      <field name="name">thuc_tap server</field>
+      <field name="model_id" ref="model_thuc_tap_thuc_tap"/>
+      <field name="state">code</field>
+      <field name="code">
+        action = {
+          "type": "ir.actions.act_window",
+          "view_mode": "tree,form",
+          "res_model": model._name,
+        }
+      </field>
+    </record>
+-->
+
+    <!-- Top menu item -->
+<!--
+    <menuitem name="thuc_tap" id="thuc_tap.menu_root"/>
+-->
+    <!-- menu categories -->
+<!--
+    <menuitem name="Menu 1" id="thuc_tap.menu_1" parent="thuc_tap.menu_root"/>
+    <menuitem name="Menu 2" id="thuc_tap.menu_2" parent="thuc_tap.menu_root"/>
+-->
+    <!-- actions -->
+<!--
+    <menuitem name="List" id="thuc_tap.menu_1_list" parent="thuc_tap.menu_1"
+              action="thuc_tap.action_window"/>
+    <menuitem name="Server to list" id="thuc_tap" parent="thuc_tap.menu_2"
+              action="thuc_tap.action_server"/>
+-->
+  </data>
+</odoo>

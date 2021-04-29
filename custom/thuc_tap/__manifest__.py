@@ -1,24 +1,35 @@
 # -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
-    'name': '',
-    'version': '1.1',
-    'summary': '',
-    'sequence': 1,
-    'description': """QUAN LY LOP HOC""",
-    'category': 'Productivity',
-    'website': 'https://www.odoo.com/page/billing',
-    'depends': [
-    ],
+    'name': "thuc_tap",
+
+    'summary': """
+        Short (1 phrase/line) summary of the module's purpose, used as
+        subtitle on modules listing or apps.openerp.com""",
+
+    'description': """
+        Long description of module's purpose
+    """,
+
+    'author': "My Company",
+    'website': "http://www.yourcompany.com",
+
+    # Categories can be used to filter modules in modules listing
+    # Check https://github.com/odoo/odoo/blob/13.0/odoo/addons/base/data/ir_module_category_data.xml
+    # for the full list
+    'category': 'Uncategorized',
+    'version': '0.1',
+
+    # any module necessary for this one to work correctly
+    'depends': ['base'],
+
+    # always loaded
     'data': [
-        'views/bidding_package.xml',
-        'views/size_standard.xml',
-        'data/sequence_subject.xml',
-        'data/sequence_teacher.xml',
-        'data/sequence_bidding_package.xml',
-        'data/sequence_size_standard.xml'
+        # 'security/ir.model.access.csv',
+        'views/views.xml',
+        'views/templates.xml',
     ],
-    'installable': True,
-    'application': True,
-    'aotu_install': False,
+    # only loaded in demonstration mode
+    'demo': [
+        'demo/demo.xml',
+    ],
 }
