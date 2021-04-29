@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="bidding_package_tree" model="ir.ui.view">
+        <field name="name">mg.bidding.package.tree</field>
+        <field name="model">mg.bidding.package</field>
+        <field name="arch" type="xml">
+            <tree string="Bidding package">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="status"/>
+                <field name="from_depot"/>
+                <field name="to_depot"/>
+                <field name="receive_date"/>
+                <field name="return_date"/>
+                <field name="from_address"/>
+                <field name="to_address"/>
+                <field name="is_publish"/>
+                <field name="publish_time"/>
+                <field name="publish_time_plan"/>
+                <field name="duration_time"/>
+                <field name="is_real"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="bidding_package_form" model="ir.ui.view">
+        <field name="name">mg.bidding.package.form</field>
+        <field name="model">mg.bidding.package</field>
+        <field name="arch" type="xml">
+            <form string="Bidding package">
+                <sheet>
+                    <div class="o_horizontal_separator">
+                        Main information
+                    </div>
+                    <group>
+                        <group>
+                            <field name="from_depot"/>
+                            <field name="is_real"/>
+                            <field name="duration_time"/>
+                            <field name="status"/>
+                        </group>
+                        <group>
+                            <field name="to_depot"/>
+                            <field name="to_depot"/>
+                            <field name="receive_date"/>
+                            <field name="return_date"/>
+                        </group>
+                    </group>
+                    <div class="o_horizontal_separator">
+                        Extra information
+                    </div>
+                    <group>
+                        <group>
+                            <field name="from_address"/>
+                            <field name="is_publish"/>
+                            <field name="duration_time"/>
+                        </group>
+                        <group>
+                            <field name="to_address"/>
+                            <field name="publish_time_plan"/>
+                            <field name="is_auto"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="bidding_package_action" model="ir.actions.act_window">
+        <field name="name">Bidding package</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">mg.bidding.package</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your Bidding package
+            </p>
+        </field>
+    </record>
+    <record id="action_mg_class" model="ir.actions.act_window">
+        <field name="name">Bidding package</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">mg.bidding.package</field>
+        <!-- <field name="view_type">form</field> --> <!-- Odoo 13 has removed this field -->
+        <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('bidding_package_tree')}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('bidding_package_form')})]"/>
+    </record>
+    <!-- Top menu item -->
+    <menuitem id="class_root"
+              name="Managerment"
+              sequence="10"/>
+    <menuitem id="bidding_package_root"
+              name="Bidding Package"
+              parent="class_root"
+              sequence="10"/>
+    <menuitem id="bidding_package"
+              name="Bidding Package"
+              parent="bidding_package_root"
+              action="action_mg_class"
+              sequence="10"/>
+
+</odoo>
