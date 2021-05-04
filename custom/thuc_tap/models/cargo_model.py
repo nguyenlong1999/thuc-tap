@@ -5,6 +5,7 @@ from odoo.exceptions import ValidationError
 class Cargo(models.Model):
     _name = "mg.cargo"
     _description = "Cargo"
+    _code = "code"
 
     code = fields.Char(String='code')
 

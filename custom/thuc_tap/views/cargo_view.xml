@@ -38,39 +38,55 @@
         <field name="arch" type="xml">
             <form string="CARGO">
                 <sheet>
-                    <sheet>
-                        <group>
-                            <field name="name"/>
-                        </group>
-                        <group>
-                            <field name="total_weight"/>
-                        </group>
+                    <group>
+                        <field name="name"/>
+                    </group>
+                    <group>
                         <group>
                             <field name="length"/>
                         </group>
                         <group>
                             <field name="weight"/>
                         </group>
-                    </sheet>
-                    <group>
-                        <field name="height"/>
+                        <group>
+                            <field name="height"/>
+                        </group>
+                        <group>
+                            <field name="total_weight"/>
+                        </group>
                     </group>
                     <group>
-                        <field name="from_depot"/>
-                    </group>
-                    <group>
-                        <field name="to_depot"/>
-                    </group>
-                    <group>
-                        <field name="total_distance"/>
-                    </group>
-                    <group>
-                        <field name="size_standard_id"/>
+                        <group>
+                            <field name="from_depot"/>
+                        </group>
+                        <group>
+                            <field name="to_depot"/>
+                        </group>
+                        <group>
+                            <field name="total_distance"/>
+                        </group>
                     </group>
                     <notebook>
                         <page string="Bidding package">
                             <field name="bidding_package_id">
                                 <tree>
+                                    <field name="from_depot"/>
+                                    <field name="to_depot"/>
+                                    <field name="receive_date"/>
+                                    <field name="return_date"/>
+                                    <field name="from_address"/>
+                                    <field name="to_address"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Size standard">
+                            <field name="size_standard_id">
+                                <tree>
+                                    <field name="from_weight"/>
+                                    <field name="to_weight"/>
+                                    <field name="width"/>
+                                    <field name="height"/>
+                                    <field name="length"/>
                                 </tree>
                             </field>
                         </page>
@@ -109,7 +125,7 @@
                 (0, 0, {'view_mode': 'form', 'view_id': ref('cargo_form')})]"/>
     </record>
 
-        <!-- Top menu item -->
+    <!-- Top menu item -->
     <menuitem id="class_root"
               name="Managerment"
               sequence="10"/>
