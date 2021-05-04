@@ -1,36 +1,36 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-    <record id="cargo_kanban" model="ir.ui.view">
-        <field name="name">mg.cargo.kanban</field>
-        <field name="model">mg.cargo</field>
-        <field name="arch" type="xml">
-            <kanban class="o_res_partner_kanban">
-                <templates>
-                    <t t-name="kanban-box">
-                        <div class="oe_resource_vignette">
-                            <div class="oe_resource_image">
-                                <a type="edit">
-                                    <img t-att-src="kanban_image('', 'photo', avatar)"
-                                         class="oe_resource_picture"/>
-                                </a>
-                            </div>
-                            <div class="oe_resource_details">
-                                <ul>
-                                    <field name="code"/>
-                                    <field name="name"/>
-                                    <field name="total_weight"/>
-                                    <field name="from_depot"/>
-                                    <field name="to_depot"/>
-                                    <field name="total_distance"/>
-                                </ul>
-                            </div>
-                        </div>
+    <!--    <record id="cargo_kanban" model="ir.ui.view">-->
+    <!--        <field name="name">mg.cargo.kanban</field>-->
+    <!--        <field name="model">mg.cargo</field>-->
+    <!--        <field name="arch" type="xml">-->
+    <!--            <kanban class="o_res_partner_kanban">-->
+    <!--                <templates>-->
+    <!--                    <t t-name="kanban-box">-->
+    <!--                        <div class="oe_resource_vignette">-->
+    <!--                            <div class="oe_resource_image">-->
+    <!--                                <a type="edit">-->
+    <!--                                    <img t-att-src="kanban_image('', 'photo', avatar)"-->
+    <!--                                         class="oe_resource_picture"/>-->
+    <!--                                </a>-->
+    <!--                            </div>-->
+    <!--                            <div class="oe_resource_details">-->
+    <!--                                <ul>-->
+    <!--                                    <field name="code"/>-->
+    <!--                                    <field name="name"/>-->
+    <!--                                    <field name="total_weight"/>-->
+    <!--                                    <field name="from_depot"/>-->
+    <!--                                    <field name="to_depot"/>-->
+    <!--                                    <field name="total_distance"/>-->
+    <!--                                </ul>-->
+    <!--                            </div>-->
+    <!--                        </div>-->
 
-                    </t>
-                </templates>
-            </kanban>
-        </field>
-    </record>
+    <!--                    </t>-->
+    <!--                </templates>-->
+    <!--            </kanban>-->
+    <!--        </field>-->
+    <!--    </record>-->
     <record id="cargo_form" model="ir.ui.view">
         <field name="name">mg.cargo.form.view</field>
         <field name="model">mg.cargo</field>
