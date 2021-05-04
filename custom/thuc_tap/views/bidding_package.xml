@@ -42,7 +42,6 @@
                         </group>
                         <group>
                             <field name="to_depot"/>
-                            <field name="to_depot"/>
                             <field name="receive_date"/>
                             <field name="return_date"/>
                         </group>
@@ -62,6 +61,11 @@
                             <field name="is_auto"/>
                         </group>
                     </group>
+                    <notebook>
+                        <page string="Cargo">
+                            <field name="cargo_id"/>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>

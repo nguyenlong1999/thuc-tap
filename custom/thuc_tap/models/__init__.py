@@ -1,2 +1,3 @@
 
-from . import size_standard, bidding_package
+from . import size_standard, bidding_package, cargo_model
+

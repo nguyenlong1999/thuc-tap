@@ -24,6 +24,6 @@ class Cargo(models.Model):
 
     total_distance = fields.Float(String='Total distance', required=True)
 
-    bidding_package_id = fields.Many2many('mg.bidding.package', String='Bidding package')
+    bidding_package_id = fields.Many2many('mg.bidding.package', 'id', String='Bidding package')
 
-    size_standard_id = fields.One2many('mg.size.standard', String='Size standard')
+    size_standard_id = fields.One2many('mg.size.standard', 'id', String='Size standard')
