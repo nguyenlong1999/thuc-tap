@@ -18,6 +18,7 @@
         'data/sequence_bidding_package.xml',
         'data/sequence_size_standard.xml',
         'data/sequence_cargo.xml',
+        'data/quotation_cron_package.xml'
     ],
     'installable': True,
     'application': True,

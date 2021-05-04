@@ -118,11 +118,12 @@
         <field name="name">Cargo</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">mg.cargo</field>
-
-        <field name="view_ids" eval="[(5, 0, 0),
-                (0, 0, {'view_mode': 'tree', 'view_id': ref('cargo_tree')}),
-                (0, 0, {'view_mode': 'kanban', 'view_id': ref('cargo_kanban')}),
-                (0, 0, {'view_mode': 'form', 'view_id': ref('cargo_form')})]"/>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your Cargo
+            </p>
+        </field>
     </record>
 
     <!-- Top menu item -->
