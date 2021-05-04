@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="cargo_kanban" model="ir.ui.view">
+        <field name="name">mg.cargo.kanban</field>
+        <field name="model">mg.cargo</field>
+        <field name="arch" type="xml">
+            <kanban class="o_res_partner_kanban">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_resource_vignette">
+                            <div class="oe_resource_image">
+                                <a type="edit">
+                                    <img t-att-src="kanban_image('', 'photo', avatar)"
+                                         class="oe_resource_picture"/>
+                                </a>
+                            </div>
+                            <div class="oe_resource_details">
+                                <ul>
+                                    <field name="code"/>
+                                    <field name="name"/>
+                                    <field name="total_weight"/>
+                                    <field name="from_depot"/>
+                                    <field name="to_depot"/>
+                                    <field name="total_distance"/>
+                                </ul>
+                            </div>
+                        </div>
+
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+    <record id="cargo_form" model="ir.ui.view">
+        <field name="name">mg.cargo.form.view</field>
+        <field name="model">mg.cargo</field>
+        <field name="priority" eval="16"/>
+        <field name="arch" type="xml">
+            <form string="CARGO">
+                <sheet>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                        </group>
+                        <group>
+                            <field name="total_weight"/>
+                        </group>
+                        <group>
+                            <field name="length"/>
+                        </group>
+                        <group>
+                            <field name="weight"/>
+                        </group>
+                    </sheet>
+                    <group>
+                        <field name="height"/>
+                    </group>
+                    <group>
+                        <field name="from_depot"/>
+                    </group>
+                    <group>
+                        <field name="to_depot"/>
+                    </group>
+                    <group>
+                        <field name="total_distance"/>
+                    </group>
+                    <group>
+                        <field name="size_standard_id"/>
+                    </group>
+                    <notebook>
+                        <page string="Bidding package">
+                            <field name="bidding_package_id">
+                                <tree>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="cargo_tree" model="ir.ui.view">
+        <field name="name">mg.cargo.tree.view</field>
+        <field name="model">mg.cargo</field>
+        <field name="arch" type="xml">
+            <tree string="Cargo" default_order="create_date desc" multi_edit="1">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="total_weight"/>
+                <field name="length"/>
+                <field name="weight"/>
+                <field name="height"/>
+                <field name="from_depot"/>
+                <field name="to_depot"/>
+                <field name="total_distance"/>
+                <field name="bidding_package_id"/>
+                <field name="size_standard_id"/>
+            </tree>
+        </field>
+    </record>
+    <record id="action_manage_cargo" model="ir.actions.act_window">
+        <field name="name">Cargo</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">mg.cargo</field>
+
+        <field name="view_ids" eval="[(5, 0, 0),
+                (0, 0, {'view_mode': 'tree', 'view_id': ref('cargo_tree')}),
+                (0, 0, {'view_mode': 'kanban', 'view_id': ref('cargo_kanban')}),
+                (0, 0, {'view_mode': 'form', 'view_id': ref('cargo_form')})]"/>
+    </record>
+
+        <!-- Top menu item -->
+    <menuitem id="class_root"
+              name="Managerment"
+              sequence="10"/>
+    <menuitem id="manage_cargo_root"
+              name="Cargo"
+              parent="class_root"
+              sequence="10"/>
+    <menuitem id="cargo"
+              name="Cargo"
+              parent="manage_cargo_root"
+              action="action_manage_cargo"
+              sequence="10"/>
+</odoo>
