@@ -15,4 +15,4 @@ class SizeStandard(models.Model):
     width = fields.Float(Float="Width", required=True)
     height = fields.Float(Float="Height", required=True)
     length = fields.Float(Float="Length", required=True)
-    cargo_id = fields.Many2one("mg.cargo", 'id', String="Cargo")
+    cargo_id = fields.One2many("mg.cargo", 'id', String="Cargo")
