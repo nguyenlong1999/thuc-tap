@@ -35,9 +35,9 @@
                     </div>
                     <group>
                         <group>
+                            <field name="name"/>
                             <field name="from_depot"/>
                             <field name="is_real"/>
-                            <field name="duration_time"/>
                             <field name="status"/>
                         </group>
                         <group>
@@ -57,13 +57,14 @@
                         </group>
                         <group>
                             <field name="to_address"/>
-                            <field name="publish_time_plan"/>
                             <field name="is_auto"/>
+                            <field name="publish_time"/>
+                            <field name="publish_time_plan" attrs="{'invisible': [('is_auto', '!=', True)]}"/>
                         </group>
                     </group>
                     <notebook>
                         <page string="Cargo">
-                            <field name="cargo_id"/>
+                            <field name="cargo_id" attrs="{'invisible': [('is_real', '!=', True)]}"/>
                         </page>
                     </notebook>
                 </sheet>
