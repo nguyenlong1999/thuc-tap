@@ -67,6 +67,17 @@
                         </group>
                     </group>
                     <notebook>
+                        <page string="Size standard">
+                            <field name="size_standard_id">
+                                <tree>
+                                    <field name="from_weight"/>
+                                    <field name="to_weight"/>
+                                    <field name="width"/>
+                                    <field name="height"/>
+                                    <field name="length"/>
+                                </tree>
+                            </field>
+                        </page>
                         <page string="Bidding package">
                             <field name="bidding_package_id">
                                 <tree>
@@ -76,17 +87,6 @@
                                     <field name="return_date"/>
                                     <field name="from_address"/>
                                     <field name="to_address"/>
-                                </tree>
-                            </field>
-                        </page>
-                        <page string="Size standard">
-                            <field name="size_standard_id">
-                                <tree>
-                                    <field name="from_weight"/>
-                                    <field name="to_weight"/>
-                                    <field name="width"/>
-                                    <field name="height"/>
-                                    <field name="length"/>
                                 </tree>
                             </field>
                         </page>

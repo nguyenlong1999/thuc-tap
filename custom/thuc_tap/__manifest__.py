@@ -9,7 +9,8 @@
     'category': 'Productivity',
     'website': 'https://www.odoo.com/page/billing',
     'depends': [
-        'mail'
+        'mail',
+        'web_google_maps'
     ],
     'data': [
         'security/ir.model.access.csv',
@@ -20,7 +21,7 @@
         'data/sequence_bidding_package.xml',
         'data/sequence_size_standard.xml',
         'data/sequence_cargo.xml',
-        'data/quotation_cron_package.xml'
+        # 'data/quotation_cron_package.xml'
     ],
     'installable': True,
     'application': True,
