@@ -2,7 +2,6 @@ import datetime
 
 from odoo import fields, models, exceptions, api
 import re
-
 from odoo.exceptions import ValidationError
 
 
@@ -18,8 +17,8 @@ class BiddingPackage(models.Model):
         ("1", "đã duyệt"),
         ("2", "chờ xác nhận"),
     ], string="status", required=True, default="0")
-    from_depot = fields.Char(string="From Depot", required=True)
-    to_depot = fields.Char(string="To Depot", required=True)
+    from_depot = fields.Many2one("mg.depot", string="From Depot", required=True)
+    to_depot = fields.Many2one("mg.depot", string="To Depot", required=True)
     receive_date = fields.Datetime(string="Receive date", required=True)
     return_date = fields.Datetime(string="Return date", required=True)
     from_address = fields.Char(string="From Address", required=True)
@@ -30,7 +29,8 @@ class BiddingPackage(models.Model):
     publish_time_plan = fields.Datetime(datetime="Public time plan")
     duration_time = fields.Integer(integer="Duration time")
     is_real = fields.Boolean(string="Is real package", default=True)
-    cargo_id = fields.Many2many("mg.cargo", 'id', string="Cargo")
+    cargo_id = fields.Many2many("mg.cargo", 'id', string="Cargo", domain="[('from_depot', '=', from_depot),"
+                                                                         " ('to_depot', '=', to_depot)]")
 
     @api.onchange('return_date')
     def onchange_return_date(self):
@@ -38,6 +38,14 @@ class BiddingPackage(models.Model):
             if bdp.return_date is not False:
                 if bdp.return_date <= bdp.receive_date or bdp.return_date <= datetime.datetime.now():
                     raise exceptions.ValidationError("Impossible")
+
+    @api.onchange("from_depot")
+    def onchange_from_depot_and_to_depot(self):
+        for bdp in self:
+            if not bdp.to_depot:
+                break
+            if self.from_depot == self.to_depot:
+                raise exceptions.ValidationError("Impossible depot")
 
     def _check_expiry(self):
         package_orders = self.env['mg.bidding.package'].search([])
