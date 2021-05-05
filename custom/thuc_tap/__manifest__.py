@@ -9,11 +9,13 @@
     'category': 'Productivity',
     'website': 'https://www.odoo.com/page/billing',
     'depends': [
+        'mail'
     ],
     'data': [
         'security/ir.model.access.csv',
         'views/bidding_package.xml',
         'views/size_standard.xml',
+        'views/depot.xml',
         'views/cargo_view.xml',
         'data/sequence_bidding_package.xml',
         'data/sequence_size_standard.xml',
