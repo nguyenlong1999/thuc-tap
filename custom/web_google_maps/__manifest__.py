@@ -18,7 +18,7 @@ form view, provide autocomplete feature when typing address of partner
 """,
     'depends': [
         'base_setup',
-        'base_geolocalize',
+        'base_geolocalize'
     ],
     'website': '',
     'data': [
