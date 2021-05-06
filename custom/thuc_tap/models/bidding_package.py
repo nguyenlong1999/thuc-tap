@@ -51,11 +51,21 @@ class BiddingPackage(models.Model):
         package_orders = self.env['mg.bidding.package'].search([])
         for order in package_orders:
             today = fields.Datetime.now()
-            if order.publish_time_plan <= today:
-                order.is_publish = True
-                if order.publish_time is False:
-                    order.publish_time = fields.Datetime.now()
+            if order.publish_time_plan is not False:
+                if order.publish_time_plan <= today:
+                    order.is_publish = True
+                    if order.publish_time is False:
+                        order.publish_time = fields.Datetime.now()
             if order.publish_time is not False:
                 duration = datetime.timedelta(minutes=order.duration_time) + order.publish_time
                 if duration <= fields.Datetime.now():
                     order.is_publish = False
+
+    def action_browse(self):
+        for bdp in self:
+            if bdp.is_publish is False:
+                if bdp.publish_time is False:
+                    bdp.is_publish = True
+                    bdp.publish_time = fields.Datetime.now()
+            else:
+                raise exceptions.ValidationError("Đã duyệt")

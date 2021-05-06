@@ -29,6 +29,9 @@
         <field name="model">mg.bidding.package</field>
         <field name="arch" type="xml">
             <form string="Bidding package">
+                <header>
+                    <button name="action_browse" type="object" string="Browse" class="oe_highlight" attrs="{'invisible': [('is_auto', '==', True)]}"/>
+                </header>
                 <sheet>
                     <div class="o_horizontal_separator">
                         Main information
