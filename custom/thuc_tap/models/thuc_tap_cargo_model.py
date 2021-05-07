@@ -1,5 +1,6 @@
 import ast
 
+from custom.thuc_tap.constant.thuc_tap_constant import Constant
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 import requests
@@ -20,20 +21,20 @@ class Cargo(models.Model):
 
     from_depot = fields.Many2one('mg.depot', 'From', required=True)
     to_depot = fields.Many2one('mg.depot', 'To', required=True)
-    total_distance = fields.Char(String='Total distance', readonly=True)
+    total_distance = fields.Char(String='Total distance')
 
     bidding_package_id = fields.Many2many('mg.bidding.package', 'id', String='Bidding package', readonly=True)
-    size_standard_id = fields.Many2one('mg.size.standard', 'id', String='Size standard')
+    size_standard_id = fields.Many2one('mg.size.standard', String='Size standard')
 
     def call_api(self, from_depot, to_depot):
-        url = 'https://maps.googleapis.com/maps/api/directions/json?mode=driving&transit_routing_preference=less_driving'
+        url = Constant.API_MAP_ROUTE_URL
         fr = '&origin=' + str(from_depot.latitude) + ',' + str(from_depot.longitude) + ''
         to = '&destination=' + str(to_depot.latitude) + ',' + str(to_depot.longitude) + ''
-        key = '&key=AIzaSyCmzEKuZOtAuDR5-iHmJvLScbSolUJEhBk'
+        key = '&key='+Constant.API_MAP_ROUTE_KEY
         return self.get_dict(url + fr + to + key)
 
-    def get_dict(self, str):
-        result = requests.get(str).content
+    def get_dict(self, string):
+        result = requests.get(string).content
         result = ast.literal_eval(result.decode('utf-8'))
         return result
 
@@ -62,4 +63,35 @@ class Cargo(models.Model):
 
             routes = self.list_to_dict(result['routes'])
             legs = routes['legs'][0][0]
-            self.total_distance = legs['distance']['text']
+            rec.write({
+                'total_distance': legs['distance']['text']
+            })
+
+    @api.onchange('total_weight')
+    def onchange_total_weight(self):
+        if self.total_weight < self.weight:
+            raise ValidationError(_('Total weight invalid'))
+
+    @api.onchange('size_standard_id')
+    def onchange_size_standard_id(self):
+        size_infor = self.env['mg.size.standard'].search([('id', '=', self.size_standard_id.id)])
+        self.height = size_infor.height
+        self.weight = size_infor.width
+
+    @api.onchange('weight')
+    def onchange_weight(self):
+        size_infor = self.env['mg.size.standard'].search([('id', '=', self.size_standard_id.id)])
+        if size_infor.weight < self.weight:
+            raise ValidationError(_('Weight invalid'))
+
+    @api.onchange('height')
+    def onchange_height(self):
+        size_infor = self.env['mg.size.standard'].search([('id', '=', self.size_standard_id.id)])
+        if size_infor.height < self.height:
+            raise ValidationError(_('Height invalid'))
+
+    @api.onchange('length')
+    def onchange_length(self):
+        size_infor = self.env['mg.size.standard'].search([('id', '=', self.size_standard_id.id)])
+        if size_infor.length < self.length:
+            raise ValidationError(_('Length invalid'))

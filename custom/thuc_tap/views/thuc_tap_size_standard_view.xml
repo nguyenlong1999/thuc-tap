@@ -7,6 +7,7 @@
         <field name="arch" type="xml">
             <tree string="Size standard">
                 <field name="code"/>
+                <field name="name"/>
                 <field name="from_weight"/>
                 <field name="to_weight"/>
                 <field name="width"/>
@@ -26,6 +27,11 @@
                         <h1>
                             New
                         </h1>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                            </group>
+                        </group>
                         <div class="o_horizontal_separator">Size standard Details</div>
                     </div>
                     <group>

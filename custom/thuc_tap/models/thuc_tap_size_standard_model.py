@@ -9,6 +9,7 @@ class SizeStandard(models.Model):
     _description = "Package Record"
     _code = "code"
 
+    name = fields.Char(string='Name', required=True)
     code = fields.Char(string='Code')
     from_weight = fields.Float(Float="From weight", required=True)
     to_weight = fields.Float(Float="To weight", required=True)

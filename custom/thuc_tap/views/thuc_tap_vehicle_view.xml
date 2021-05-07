@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+    <record id="size_vehicle_tree" model="ir.ui.view">
+        <field name="name">mg.vehicle.tree</field>
+        <field name="model">mg.vehicle</field>
+        <field name="arch" type="xml">
+            <tree string="Size standard">
+                <field name="code"/>
+                <field name="name"/>
+                <field name="tonnage"/>
+                <field name="type"/>
+                <field name="license_plate"/>
+                <field name="color"/>
+                <field name="status"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="vehicle_form" model="ir.ui.view">
+        <field name="name">mg.vehicle.form</field>
+        <field name="model">mg.vehicle</field>
+        <field name="arch" type="xml">
+            <form string="Vehicle">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="tonnage"/>
+                            <field name="type"/>
+                            <field name="license_plate"/>
+                            <field name="color"/>
+                            <field name="status"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="vehicle_action" model="ir.actions.act_window">
+        <field name="name">Vehicle</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">mg.vehicle</field>
+        <field name="view_mode">tree,kanban,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your Size standard
+            </p>
+        </field>
+    </record>
+
+    <!-- Top menu item -->
+    <menuitem id="class_root"
+              name="Managerment"
+              sequence="10"/>
+    <menuitem id="vehicle_root"
+              name="Vehicle"
+              parent="class_root"
+              sequence="10"/>
+    <menuitem id="size_standard"
+              name="Vehicle"
+              parent="vehicle_root"
+              action="vehicle_action"
+              sequence="10"/>
+
+</odoo>

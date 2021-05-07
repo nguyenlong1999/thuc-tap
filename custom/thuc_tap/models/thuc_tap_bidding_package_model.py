@@ -1,5 +1,6 @@
 import datetime
 
+from custom.thuc_tap.constant.thuc_tap_status_tag import StatusTag
 from odoo import fields, models, exceptions, api
 import re
 from odoo.exceptions import ValidationError
@@ -13,6 +14,7 @@ class BiddingPackage(models.Model):
     name = fields.Char(string="Name package")
     code = fields.Char(string='Code')
     status = fields.Selection([
+        ("-1", "hủy"),
         ("0", "chưa nhận"),
         ("1", "đã duyệt"),
         ("2", "chờ xác nhận"),
@@ -69,3 +71,12 @@ class BiddingPackage(models.Model):
                     bdp.publish_time = fields.Datetime.now()
             else:
                 raise exceptions.ValidationError("Đã duyệt")
+
+    def change_status(self, id, status):
+        package_record = self.search([('id', '=', id)])
+        package_record.write({'status': status})
+        return True
+
+    def copy(self, default={}):
+        default['status'] = StatusTag.STATUS_UNCONFIMRED
+        return super(BiddingPackage, self).copy(default=default)
