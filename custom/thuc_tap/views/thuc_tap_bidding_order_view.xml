@@ -38,14 +38,25 @@
                             <field name="package_id"/>
                             <field name="type"/>
                             <field name="status"/>
-                            <field name="from_depot"/>
+                        </group>
+                        <group>
                             <field name="to_depot"/>
+                            <field name="from_depot"/>
+                            <field name="time_create" readonly='True'/>
+                        </group>
+                    </group>
+                    <div class="o_horizontal_separator">
+                        Extra information
+                    </div>
+                    <group>
+                        <group>
                             <field name="receive_date"/>
                             <field name="return_date"/>
                             <field name="from_address"/>
+                        </group>
+                        <group>
                             <field name="to_address"/>
                             <field name="vehicle"/>
-                            <field name="time_create" readonly='True'/>
                         </group>
                     </group>
                     <notebook>

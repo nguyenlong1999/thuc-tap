@@ -26,6 +26,11 @@ class Cargo(models.Model):
     bidding_package_id = fields.Many2many('mg.bidding.package', 'id', String='Bidding package', readonly=True)
     size_standard_id = fields.Many2one('mg.size.standard', String='Size standard')
 
+    @api.model
+    def create(self, values):
+        values['code'] = self.env['ir.sequence'].next_by_code('mg.cargo')
+        return super(Cargo, self).create(values)
+
     def call_api(self, from_depot, to_depot):
         url = Constant.API_MAP_ROUTE_URL
         fr = '&origin=' + str(from_depot.latitude) + ',' + str(from_depot.longitude) + ''
