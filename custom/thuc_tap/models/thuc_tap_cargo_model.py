@@ -30,7 +30,7 @@ class Cargo(models.Model):
         url = Constant.API_MAP_ROUTE_URL
         fr = '&origin=' + str(from_depot.latitude) + ',' + str(from_depot.longitude) + ''
         to = '&destination=' + str(to_depot.latitude) + ',' + str(to_depot.longitude) + ''
-        key = '&key='+Constant.API_MAP_ROUTE_KEY
+        key = '&key=' + Constant.API_MAP_ROUTE_KEY
         return self.get_dict(url + fr + to + key)
 
     def get_dict(self, string):
@@ -58,7 +58,7 @@ class Cargo(models.Model):
                 break
 
             result = self.call_api(rec.from_depot, rec.to_depot)
-            if result['status'] == 'ZERO_RESULTS':
+            if result['status'] == Constant.API_MAP_ZERO_RESULTS:
                 raise ValidationError(_('Cannot calculate distance!!'))
 
             routes = self.list_to_dict(result['routes'])
@@ -76,7 +76,7 @@ class Cargo(models.Model):
     def onchange_size_standard_id(self):
         size_infor = self.env['mg.size.standard'].search([('id', '=', self.size_standard_id.id)])
         self.height = size_infor.height
-        self.weight = size_infor.width
+        self.weight = size_infor.weight
 
     @api.onchange('weight')
     def onchange_weight(self):

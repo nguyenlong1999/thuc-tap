@@ -66,11 +66,13 @@ class BiddingOrder(models.Model):
         return True
 
     def _check_duration(self):
-        order_recs = self.env['mg.bidding.order'].search([])
+        order_recs = self.search([])
         for order in order_recs:
             if order.time_create is not False:
                 duration = datetime.timedelta(minutes=Constant.BIDDING_ORDER_DURATION_MINUTES) + order.time_create
                 if duration <= fields.Datetime.now() and not order.vehicle:
                     order.type = TypeTag.TYPE_CANCEL
-                    self.env['mg.bidding.package'].change_status(order.package_id, StatusTag.STATUS_CANCEL)
-                    self.env['mg.bidding.package'].search([('id', '=', order.package_id)]).copy()
+                    bidding_package = self.env['mg.bidding.package']
+                    bidding_package.change_status(order.package_id.id, StatusTag.STATUS_CANCEL)
+                    return bidding_package.copy([('id', '=', order.package_id.id)])
+        return True

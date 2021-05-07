@@ -58,7 +58,7 @@
               name="Vehicle"
               parent="class_root"
               sequence="10"/>
-    <menuitem id="size_standard"
+    <menuitem id="vehicle"
               name="Vehicle"
               parent="vehicle_root"
               action="vehicle_action"

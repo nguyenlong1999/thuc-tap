@@ -13,7 +13,7 @@ class SizeStandard(models.Model):
     code = fields.Char(string='Code')
     from_weight = fields.Float(Float="From weight", required=True)
     to_weight = fields.Float(Float="To weight", required=True)
-    width = fields.Float(Float="Width", required=True)
+    weight = fields.Float(Float="Weight", required=True)
     height = fields.Float(Float="Height", required=True)
     length = fields.Float(Float="Length", required=True)
     cargo_id = fields.One2many("mg.cargo", 'id', String="Cargo")

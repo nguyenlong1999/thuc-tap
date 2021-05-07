@@ -79,4 +79,5 @@ class BiddingPackage(models.Model):
 
     def copy(self, default={}):
         default['status'] = StatusTag.STATUS_UNCONFIMRED
-        return super(BiddingPackage, self).copy(default=default)
+        rec = super(BiddingPackage, self).copy(default=default)
+        return rec

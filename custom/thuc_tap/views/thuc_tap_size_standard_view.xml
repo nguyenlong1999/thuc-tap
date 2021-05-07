@@ -10,7 +10,7 @@
                 <field name="name"/>
                 <field name="from_weight"/>
                 <field name="to_weight"/>
-                <field name="width"/>
+                <field name="weight"/>
                 <field name="height"/>
                 <field name="length"/>
             </tree>
@@ -36,7 +36,7 @@
                     </div>
                     <group>
                         <group>
-                            <field name="width"/>
+                            <field name="weight"/>
                             <field name="height"/>
                             <field name="length"/>
                         </group>
