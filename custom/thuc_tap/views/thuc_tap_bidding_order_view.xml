@@ -14,8 +14,7 @@
                 <field name="to_depot"/>
                 <field name="receive_date"/>
                 <field name="return_date"/>
-                <field name="from_address"/>
-                <field name="to_address"/>
+                <field name="package_id"/>
             </tree>
         </field>
     </record>
@@ -25,6 +24,10 @@
         <field name="model">mg.bidding.order</field>
         <field name="arch" type="xml">
             <form string="Bidding package">
+                <header>
+                    <button name="action_reconfirm" type="object" string="Reconfirm" class="oe_highlight"
+                            attrs="{'invisible': [('type', '!=', '2')]}"/>
+                </header>
                 <sheet>
                     <div class="o_horizontal_separator">
                         Main information

@@ -1,6 +1,7 @@
 import datetime
 
 from custom.thuc_tap.constant.thuc_tap_status_tag import StatusTag
+from custom.thuc_tap.constant.thuc_tap_type_tag import TypeTag
 from odoo import fields, models, exceptions, api
 import re
 from odoo.exceptions import ValidationError
@@ -14,10 +15,10 @@ class BiddingPackage(models.Model):
     name = fields.Char(string="Name package")
     code = fields.Char(string='Code')
     status = fields.Selection([
-        ("-1", "hủy"),
-        ("0", "chưa nhận"),
-        ("1", "đã duyệt"),
-        ("2", "chờ xác nhận"),
+        ("-1", "Hủy"),
+        ("0", "Chưa nhận"),
+        ("1", "Đã duyệt"),
+        ("2", "Chờ xác nhận"),
     ], string="status", required=True, default="0")
     from_depot = fields.Many2one("mg.depot", string="From Depot", required=True)
     to_depot = fields.Many2one("mg.depot", string="To Depot", required=True)
@@ -31,8 +32,12 @@ class BiddingPackage(models.Model):
     publish_time_plan = fields.Datetime(datetime="Public time plan")
     duration_time = fields.Integer(integer="Duration time")
     is_real = fields.Boolean(string="Is real package", default=True)
-    cargo_id = fields.Many2many("mg.cargo", 'id', string="Cargo", domain="[('from_depot', '=', from_depot),"
-                                                                         "('to_depot', '=', to_depot)]")
+
+    bidding_order_id = fields.One2many('mg.bidding.order', 'package_id', string='Bidding Order', copy=False)
+
+    cargo_id = fields.Many2many("mg.cargo", 'id', string="Cargo",
+                                domain="[('from_depot', '=', from_depot),"
+                                       "('to_depot', '=', to_depot)]")
 
     @api.model
     def create(self, values):
@@ -82,7 +87,7 @@ class BiddingPackage(models.Model):
         for order in package_orders:
             today = fields.Datetime.now()
             if order.publish_time_plan is not False:
-                if order.publish_time_plan <= today:
+                if order.publish_time_plan <= today and order.status == StatusTag.STATUS_UNCONFIMRED:
                     order.is_publish = True
                     if order.publish_time is False:
                         order.publish_time = fields.Datetime.now()
@@ -100,12 +105,36 @@ class BiddingPackage(models.Model):
             else:
                 raise exceptions.ValidationError("Đã duyệt")
 
+    def action_browse_order(self):
+        for bdp in self:
+            if bdp.status == StatusTag.STATUS_WAIT:
+                bdp.status = StatusTag.STATUS_APPROVED
+                self.env['mg.bidding.order'].change_type(bdp.bidding_order_id.id, TypeTag.TYPE_APPROVED)
+        return True
+
     def change_status(self, id, status):
         package_record = self.search([('id', '=', id)])
         package_record.write({'status': status})
         return True
 
-    def copy(self, default={}):
-        default['status'] = StatusTag.STATUS_UNCONFIMRED
-        rec = super(BiddingPackage, self).copy(default=default)
-        return rec
+    def unlink(self):
+        for cargo in self.cargo_id:
+            self.env['mg.cargo'].update_bidding_package(cargo.id, False)
+        self.status = StatusTag.STATUS_CANCEL
+        self.is_publish = False
+
+    def delete_and_clone(self, id):
+        self.change_status(id, StatusTag.STATUS_CANCEL)
+        package_id = self.browse(id).copy({'status': StatusTag.STATUS_UNCONFIMRED}).id
+        list_cargo = self.search([('id', '=', id)]).cargo_id
+
+        print(list_cargo)
+        print(package_id)
+        for cargo in list_cargo:
+            print(cargo.id)
+            self.env['mg.cargo'].update_bidding_package(cargo.id, package_id)
+
+    # def copy(self, default={}):
+    #     default['status'] = StatusTag.STATUS_UNCONFIMRED
+    #     rec = super(BiddingPackage, self).copy(default=default)
+    #     return rec

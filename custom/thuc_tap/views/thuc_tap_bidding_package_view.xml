@@ -13,12 +13,8 @@
                 <field name="to_depot"/>
                 <field name="receive_date"/>
                 <field name="return_date"/>
-                <field name="from_address"/>
-                <field name="to_address"/>
                 <field name="is_publish"/>
-                <field name="publish_time"/>
-                <field name="publish_time_plan"/>
-                <field name="duration_time"/>
+                <field name="is_auto"/>
                 <field name="is_real"/>
             </tree>
         </field>
@@ -30,7 +26,10 @@
         <field name="arch" type="xml">
             <form string="Bidding package">
                 <header>
-                    <button name="action_browse" type="object" string="Browse" class="oe_highlight" attrs="{'invisible': [('is_auto', '==', True)]}"/>
+                    <button name="action_browse" type="object" string="Browse" class="oe_highlight"
+                            attrs="{'invisible': [('|'),('is_auto', '==', True), ('is_publish', '==', True)]}"/>
+                    <button name="action_browse_order" type="object" string="Browse order" class="oe_highlight"
+                            attrs="{'invisible': [('status', '!=', '2')]}"/>
                 </header>
                 <sheet>
                     <div class="o_horizontal_separator">
@@ -41,7 +40,7 @@
                             <field name="name"/>
                             <field name="from_depot"/>
                             <field name="is_real"/>
-                            <field name="status"/>
+                            <field name="status" readonly='True'/>
                         </group>
                         <group>
                             <field name="to_depot"/>
@@ -67,7 +66,11 @@
                     </group>
                     <notebook>
                         <page string="Cargo">
-                            <field name="cargo_id" attrs="{'invisible': [('is_real', '!=', True)]}"  domain="[('bidding_package_id', '=', False)]"/>
+                            <field name="cargo_id" attrs="{'invisible': [('is_real', '!=', True)]}"
+                                   domain="[('bidding_package_id', '=', False)]"/>
+                        </page>
+                        <page string="bidding_order_id">
+                            <field name="bidding_order_id"/>
                         </page>
                     </notebook>
                 </sheet>

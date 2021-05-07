@@ -3,7 +3,7 @@ import datetime
 from custom.thuc_tap.constant.thuc_tap_constant import Constant
 from custom.thuc_tap.constant.thuc_tap_status_tag import StatusTag
 from custom.thuc_tap.constant.thuc_tap_type_tag import TypeTag
-from odoo import fields, models, exceptions, api
+from odoo import fields, models, exceptions, api, _
 import re
 from odoo.exceptions import ValidationError
 
@@ -14,7 +14,9 @@ class BiddingOrder(models.Model):
 
     name = fields.Char(string='Name', required=True)
     code = fields.Char(string='Code', readonly=True)
-    package_id = fields.Many2one('mg.bidding.package', string='Package')
+    package_id = fields.Many2one('mg.bidding.package', string='Package',
+                                 domain="[('status', '=', '0'),('bidding_order_id', '=', False)"
+                                        ",('is_publish', '=', True)]")
     type = fields.Selection([
         ("-1", "Hủy"),
         ("0", "Chưa điền thông tin"),
@@ -23,9 +25,9 @@ class BiddingOrder(models.Model):
         ("3", "Reconfirm"),
     ], string="Type", required=True, default="0")
     status = fields.Selection([
-        ("0", "Chưa xác nhận"),
-        ("1", "Đã duyệt"),
-        ("2", "Đã trả"),
+        ("0", "Chưa nhận"),
+        ("3", "Đã Nhận"),
+        ("4", "Đã Trả"),
     ], string="status", required=True, default="0")
     from_depot = fields.Many2one('mg.depot', 'From', required=True)
     to_depot = fields.Many2one('mg.depot', 'To', required=True)
@@ -70,9 +72,28 @@ class BiddingOrder(models.Model):
         for order in order_recs:
             if order.time_create is not False:
                 duration = datetime.timedelta(minutes=Constant.BIDDING_ORDER_DURATION_MINUTES) + order.time_create
-                if duration <= fields.Datetime.now() and not order.vehicle:
-                    order.type = TypeTag.TYPE_CANCEL
-                    bidding_package = self.env['mg.bidding.package']
-                    bidding_package.change_status(order.package_id.id, StatusTag.STATUS_CANCEL)
-                    return bidding_package.copy([('id', '=', order.package_id.id)])
+                bidding_package = self.env['mg.bidding.package']
+                if duration > fields.Datetime.now():
+                    continue
+                if order.vehicle:
+                    if order.type == '0':
+                        bidding_package.change_status(order.package_id.id, StatusTag.STATUS_WAIT)
+                        order.type = '2'
+                    continue
+                if order.type != '0':
+                    continue
+                if not order.package_id:
+                    raise ValidationError(_('Invalid Order !!' + str(order.id)))
+                order.type = TypeTag.TYPE_CANCEL
+                bidding_package.delete_and_clone(order.package_id.id)
         return True
+
+    def action_reconfirm(self):
+        self.type = TypeTag.TYPE_RECONFIRM
+        self.vehicle = False
+        self.time_create = fields.datetime.now()
+
+    def unlink(self):
+        bidding_package = self.env['mg.bidding.package']
+        bidding_package.delete_and_clone(self.package_id.id)
+        self.status = StatusTag.STATUS_CANCEL

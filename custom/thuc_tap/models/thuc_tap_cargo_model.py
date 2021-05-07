@@ -95,3 +95,10 @@ class Cargo(models.Model):
         size_infor = self.env['mg.size.standard'].search([('id', '=', self.size_standard_id.id)])
         if size_infor.length < self.length:
             raise ValidationError(_('Length invalid'))
+
+    def update_bidding_package(self, cargo_id, package_id):
+        cargo_rec = self.search([('id', '=', cargo_id)])
+        package = self.env['mg.bidding.package'].browse(package_id)
+        cargo_rec.write({
+            'bidding_package_id': package
+        })
