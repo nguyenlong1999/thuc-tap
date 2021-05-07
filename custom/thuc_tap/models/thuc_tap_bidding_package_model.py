@@ -32,7 +32,12 @@ class BiddingPackage(models.Model):
     duration_time = fields.Integer(integer="Duration time")
     is_real = fields.Boolean(string="Is real package", default=True)
     cargo_id = fields.Many2many("mg.cargo", 'id', string="Cargo", domain="[('from_depot', '=', from_depot),"
-                                                                         " ('to_depot', '=', to_depot)]")
+                                                                         "('to_depot', '=', to_depot)]")
+
+    @api.model
+    def create(self, values):
+        values['code'] = self.env['ir.sequence'].next_by_code('mg.bidding.package')
+        return super(BiddingPackage, self).create(values)
 
     @api.onchange('return_date')
     def onchange_return_date(self):
@@ -42,24 +47,28 @@ class BiddingPackage(models.Model):
                     raise exceptions.ValidationError("Impossible")
 
     @api.onchange("from_depot")
-    def _get_from_address(self):
+    def get_from_address(self):
+        self.check_from_address()
+
+    @api.onchange("to_depot")
+    def get_to_address(self):
+        self.check_to_address()
+
+    def check_from_address(self):
         for bdp in self:
             if bdp.from_depot.id is not False:
                 from_depot = self.env['mg.depot'].search([('id', '=', bdp.from_depot.id)])
                 if bdp.from_depot.id == bdp.to_depot.id:
                     raise exceptions.ValidationError("Impossible depot")
-                if from_depot is not False:
-                    bdp.from_address = from_depot.street + ", " + from_depot.state_id.name + ", " + from_depot.country_id.name
+                bdp.from_address = from_depot.street + ", " + from_depot.state_id.name + ", " + from_depot.country_id.name
 
-    @api.onchange("to_depot")
-    def onchange_to_address(self):
+    def check_to_address(self):
         for bdp in self:
             if bdp.to_depot.id is not False:
                 to_depot = self.env['mg.depot'].search([('id', '=', bdp.to_depot.id)])
                 if bdp.from_depot.id == bdp.to_depot.id:
                     raise exceptions.ValidationError("Impossible depot")
-                if to_depot is not False:
-                    bdp.to_address = to_depot.street + ", " + to_depot.state_id.name + ", " + to_depot.country_id.name
+                bdp.to_address = to_depot.street + ", " + to_depot.state_id.name + ", " + to_depot.country_id.name
 
     @api.onchange("publish_time_plan")
     def onchange_publish_time_plan(self):

@@ -67,7 +67,7 @@
                     </group>
                     <notebook>
                         <page string="Cargo">
-                            <field name="cargo_id" attrs="{'invisible': [('is_real', '!=', True)]}"/>
+                            <field name="cargo_id" attrs="{'invisible': [('is_real', '!=', True)]}"  domain="[('bidding_package_id', '=', False)]"/>
                         </page>
                     </notebook>
                 </sheet>
