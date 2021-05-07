@@ -6,3 +6,8 @@ class StatusTag():
     STATUS_WAIT = '2'  # Chờ xác nhận
     STATUS_RECEIVED = '3'  # Đã nhận
     STATUS_PAID = '4'  # Đã trả
+
+    SUCCESS = 200
+    INVALID_FIELD = 201
+    CAN_NOT_CHANGE_STATUS = 203
+    INVALID_ID =204
