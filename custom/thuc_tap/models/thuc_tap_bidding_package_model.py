@@ -42,12 +42,31 @@ class BiddingPackage(models.Model):
                     raise exceptions.ValidationError("Impossible")
 
     @api.onchange("from_depot")
-    def onchange_from_depot_and_to_depot(self):
+    def _get_from_address(self):
         for bdp in self:
-            if not bdp.to_depot:
-                break
-            if self.from_depot == self.to_depot:
-                raise exceptions.ValidationError("Impossible depot")
+            if bdp.from_depot.id is not False:
+                from_depot = self.env['mg.depot'].search([('id', '=', bdp.from_depot.id)])
+                if bdp.from_depot.id == bdp.to_depot.id:
+                    raise exceptions.ValidationError("Impossible depot")
+                if from_depot is not False:
+                    bdp.from_address = from_depot.street + ", " + from_depot.state_id.name + ", " + from_depot.country_id.name
+
+    @api.onchange("to_depot")
+    def onchange_to_address(self):
+        for bdp in self:
+            if bdp.to_depot.id is not False:
+                to_depot = self.env['mg.depot'].search([('id', '=', bdp.to_depot.id)])
+                if bdp.from_depot.id == bdp.to_depot.id:
+                    raise exceptions.ValidationError("Impossible depot")
+                if to_depot is not False:
+                    bdp.to_address = to_depot.street + ", " + to_depot.state_id.name + ", " + to_depot.country_id.name
+
+    @api.onchange("publish_time_plan")
+    def onchange_publish_time_plan(self):
+        for bdp in self:
+            if bdp.publish_time_plan is not False:
+                if bdp.publish_time_plan < datetime.datetime.now():
+                    raise exceptions.ValidationError("Must be larger than the current time")
 
     def _check_expiry(self):
         package_orders = self.env['mg.bidding.package'].search([])
