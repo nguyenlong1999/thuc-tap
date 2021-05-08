@@ -67,7 +67,16 @@
                     <notebook>
                         <page string="Cargo">
                             <field name="cargo_id" attrs="{'invisible': [('is_real', '!=', True)]}"
-                                   domain="[('bidding_package_id', '=', False)]"/>
+                                   domain="[('bidding_package_id', '=', False)]">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="code"/>
+                                    <field name="total_distance"/>
+                                    <field name="size_standard_id"/>
+                                    <field name="total_weight"/>
+                                </tree>
+                            </field>
+
                         </page>
                         <page string="bidding_order_id">
                             <field name="bidding_order_id"/>
