@@ -11,6 +11,7 @@
             <field name="interval_type">minutes</field>
             <field name="numbercall">-1</field>
             <field name="doall" eval="True"/>
+            <field name="nextcall" eval="(DateTime.now()).strftime('%Y-%m-%d 00:01:00')"/>
         </record>
     </data>
 </odoo>

@@ -23,12 +23,12 @@ class BiddingOrder(models.Model):
         ("1", "Đã duyệt"),
         ("2", "Đã điền thông tin xe"),
         ("3", "Reconfirm"),
-    ], string="Type", required=True, default="0")
+    ], string="Type", default="0")
     status = fields.Selection([
         ("0", "Chưa nhận"),
         ("3", "Đã Nhận"),
         ("4", "Đã Trả"),
-    ], string="status", required=True, default="0")
+    ], string="status", default="0")
     from_depot = fields.Many2one('mg.depot', 'From', required=True)
     to_depot = fields.Many2one('mg.depot', 'To', required=True)
     receive_date = fields.Datetime(string="Receive date", required=True)
@@ -36,8 +36,20 @@ class BiddingOrder(models.Model):
     from_address = fields.Char(string='From address', required=True)
     to_address = fields.Char(string='To address', required=True)
     company_id = fields.Char(string='Company')
-    vehicle = fields.Many2one('mg.vehicle', string='Driver')
+    vehicle = fields.Many2many('mg.vehicle', string='Vehicle')
     time_create = fields.Datetime(string='Time create')
+
+    def weight_package(self, package):
+        package_weigth = 0
+        for cargo in package.cargo_id:
+            package_weigth += cargo.total_weight
+        return package_weigth
+
+    def weight_vehicle(self, vehicles):
+        weight = 0
+        for vehicle in vehicles:
+            weight += vehicle.tonnage
+        return weight
 
     @api.onchange('package_id')
     def onchange_package_id(self):
@@ -55,6 +67,19 @@ class BiddingOrder(models.Model):
     def create(self, vals_list):
         vals_list['time_create'] = fields.Datetime.now()
         rec = super(BiddingOrder, self).create(vals_list)
+
+        rec.package_id.is_publish = False
+        return rec
+
+    @api.model
+    def write(self, vals):
+        rec = super(BiddingOrder, self).write(vals)
+        if self.weight_package(rec.package_id) > self.weight_vehicle(rec.vehicle):
+            raise ValidationError('Chưa đủ xe')
+        # if self.weight_package(rec.package_id) > self.weight_vehicle(rec.vehicle):
+        #     rec.rollback()
+        #     return StatusTag.ORDER_DO_NOT_ENOUGHT_CAR
+        # rec.commit()
         return rec
 
     def change_type(self, id, type):
@@ -75,12 +100,12 @@ class BiddingOrder(models.Model):
                 bidding_package = self.env['mg.bidding.package']
                 if duration > fields.Datetime.now():
                     continue
-                if order.vehicle:
-                    if order.type == '0':
+                if order.vehicle is not False:
+                    if order.type == TypeTag.TYPE_INCOMPLETE_INFORMATION:
                         bidding_package.change_status(order.package_id.id, StatusTag.STATUS_WAIT)
-                        order.type = '2'
+                        order.type = TypeTag.TYPE_FILLED_INFORMATION
                     continue
-                if order.type != '0':
+                if order.type != TypeTag.TYPE_INCOMPLETE_INFORMATION:
                     continue
                 if not order.package_id:
                     raise ValidationError(_('Invalid Order !!' + str(order.id)))
@@ -96,4 +121,4 @@ class BiddingOrder(models.Model):
     def unlink(self):
         bidding_package = self.env['mg.bidding.package']
         bidding_package.delete_and_clone(self.package_id.id)
-        self.status = StatusTag.STATUS_CANCEL
+        self.type = TypeTag.TYPE_CANCEL

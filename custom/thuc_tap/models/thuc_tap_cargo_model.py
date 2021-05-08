@@ -74,7 +74,11 @@ class Cargo(models.Model):
 
     @api.onchange('total_weight')
     def onchange_total_weight(self):
+        if not self.size_standard_id:
+            return
         if self.total_weight < self.weight:
+            raise ValidationError(_('Total weight invalid'))
+        if self.total_weight > self.size_standard_id.to_weight:
             raise ValidationError(_('Total weight invalid'))
 
     @api.onchange('size_standard_id')
@@ -82,21 +86,28 @@ class Cargo(models.Model):
         size_infor = self.env['mg.size.standard'].search([('id', '=', self.size_standard_id.id)])
         self.height = size_infor.height
         self.weight = size_infor.weight
+        self.length = size_infor.length
 
     @api.onchange('weight')
     def onchange_weight(self):
+        if not self.size_standard_id:
+            return
         size_infor = self.env['mg.size.standard'].search([('id', '=', self.size_standard_id.id)])
         if size_infor.weight < self.weight:
             raise ValidationError(_('Weight invalid'))
 
     @api.onchange('height')
     def onchange_height(self):
+        if not self.size_standard_id:
+            return
         size_infor = self.env['mg.size.standard'].search([('id', '=', self.size_standard_id.id)])
         if size_infor.height < self.height:
             raise ValidationError(_('Height invalid'))
 
     @api.onchange('length')
     def onchange_length(self):
+        if not self.size_standard_id:
+            return
         size_infor = self.env['mg.size.standard'].search([('id', '=', self.size_standard_id.id)])
         if size_infor.length < self.length:
             raise ValidationError(_('Length invalid'))

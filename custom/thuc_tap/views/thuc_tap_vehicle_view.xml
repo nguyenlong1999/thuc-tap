@@ -28,12 +28,16 @@
                             <field name="name"/>
                             <field name="tonnage"/>
                             <field name="type"/>
+                            <field name="company_id"/>
                             <field name="license_plate"/>
                             <field name="color"/>
                             <field name="status"/>
                         </group>
                     </group>
                 </sheet>
+                <notebook>
+
+                </notebook>
             </form>
         </field>
     </record>

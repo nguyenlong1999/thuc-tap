@@ -20,6 +20,7 @@ class BiddingPackage(models.Model):
         ("1", "Đã duyệt"),
         ("2", "Chờ xác nhận"),
     ], string="status", required=True, default="0")
+
     from_depot = fields.Many2one("mg.depot", string="From Depot", required=True)
     to_depot = fields.Many2one("mg.depot", string="To Depot", required=True)
     receive_date = fields.Datetime(string="Receive date", required=True)
@@ -117,22 +118,31 @@ class BiddingPackage(models.Model):
         package_record.write({'status': status})
         return True
 
-    def unlink(self):
-        for cargo in self.cargo_id:
-            self.env['mg.cargo'].update_bidding_package(cargo.id, False)
-        self.status = StatusTag.STATUS_CANCEL
-        self.is_publish = False
-
     def delete_and_clone(self, id):
         self.change_status(id, StatusTag.STATUS_CANCEL)
-        package_id = self.browse(id).copy({'status': StatusTag.STATUS_UNCONFIMRED}).id
+        package_id = self.browse(id).copy(
+            {'status': StatusTag.STATUS_UNCONFIMRED, 'is_publish': True, 'publish_time': fields.datetime.now()}).id
         list_cargo = self.search([('id', '=', id)]).cargo_id
-
-        print(list_cargo)
-        print(package_id)
+        if len(list_cargo) <= 0:
+            return
         for cargo in list_cargo:
-            print(cargo.id)
             self.env['mg.cargo'].update_bidding_package(cargo.id, package_id)
+
+    def unlink(self):
+        if not self.bidding_order_id:
+            for cargo in self.cargo_id:
+                self.env['mg.cargo'].update_bidding_package(cargo.id, False)
+            self.status = StatusTag.STATUS_CANCEL
+            self.is_publish = False
+            return
+        bidding_order = self.env['mg.bidding.order'].browse(self.bidding_order_id.id)
+        if bidding_order.status == StatusTag.STATUS_PAID:
+            raise ValidationError('Đã trả hàng')
+        for cargo in self.cargo_id:
+            self.env['mg.cargo'].update_bidding_package(cargo.id, False)
+        bidding_order.type = TypeTag.TYPE_CANCEL
+        self.status = StatusTag.STATUS_CANCEL
+        self.is_publish = False
 
     # def copy(self, default={}):
     #     default['status'] = StatusTag.STATUS_UNCONFIMRED

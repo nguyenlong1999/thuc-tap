@@ -6,10 +6,15 @@ class StatusTag():
     STATUS_WAIT = '2'  # Chờ xác nhận
     STATUS_RECEIVED = '3'  # Đã nhận
     STATUS_PAID = '4'  # Đã trả
-    STATUS_NOT_RECEIVED = '5'   # Chưa nhận
+    STATUS_NOT_RECEIVED = '5'  # Chưa nhận
 
     # Status API
     SUCCESS = 200
     INVALID_FIELD = 201
     CAN_NOT_CHANGE_STATUS = 203
     INVALID_ID = 204
+    PACKAGE_NOT_PUBLISH = 205
+    SERVER_ERROR = 206
+
+    # API Order
+    ORDER_DO_NOT_ENOUGHT_CAR = 301
